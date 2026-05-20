@@ -1,0 +1,18 @@
+:root {
+  --color-primary: #2b5e3b;
+  --color-primary-dark: #1e3c2c;
+  --color-bg: #f5f7fb;
+  --color-surface: #ffffff;
+  --color-border: #edf2f7;
+  --color-text: #212529;
+  --color-muted: #6c757d;
+  --color-danger: #c0392b;
+  --color-warning: #e67e22;
+  --color-error: #e74c3c;
+  --radius-card: 20px;
+  --radius-btn: 40px;
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.03);
+  --tab-height: 70px;
+  --touch-min: 44px;
+  --max-width: 600px;
+}
