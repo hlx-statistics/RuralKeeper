@@ -58,6 +58,17 @@ export const backupService = {
   async importData(file: File): Promise<void> {
     const text = await file.text()
     const data = JSON.parse(text) as BackupData
+    await this.applyBackup(data)
+  },
+
+  async loadDemoBackup(): Promise<void> {
+    const res = await fetch(`${import.meta.env.BASE_URL}demo-backup.json`)
+    if (!res.ok) throw new Error('DEMO_NOT_FOUND')
+    const data = (await res.json()) as BackupData
+    await this.applyBackup(data)
+  },
+
+  async applyBackup(data: BackupData): Promise<void> {
     if (!data.goods || !Array.isArray(data.goods)) {
       throw new Error('INVALID_BACKUP')
     }

@@ -8,6 +8,7 @@ import { useToast } from '@/composables/useToast'
 import { formatMoney, formatSaleTime } from '@/utils/format'
 import { isNativeApp } from '@/utils/platform'
 import type { SaleRecord } from '@/types'
+import SalesAnalyticsPanel from '@/components/profile/SalesAnalyticsPanel.vue'
 
 const store = useAppStore()
 const { show } = useToast()
@@ -82,7 +83,16 @@ const displaySales = computed(() => store.sales.slice(0, MAX_SALE_RECORDS_DISPLA
     </header>
 
     <section class="panel">
-      <h4>📁 数据安全</h4>
+      <h4>📖 使用说明</h4>
+      <p class="help-text">
+        <strong>卖货：</strong>「销售」页连续扫码 → 看合计 → 确认售出扣库存。<br />
+        <strong>入库：</strong>商品页点「入库+」，扫一次码后填写数量。<br />
+        <strong>收款：</strong>顾客扫您线下收款码，本 App 不处理支付。
+      </p>
+    </section>
+
+    <section class="panel">
+      <h4>📁 数据备份</h4>
       <button class="btn-primary backup-btn" @click="backup">💾 备份数据</button>
       <button class="btn-secondary restore-btn" @click="triggerRestore">📂 恢复数据</button>
       <input ref="restoreInput" type="file" accept=".json" hidden @change="onRestoreFile" />
@@ -90,19 +100,24 @@ const displaySales = computed(() => store.sales.slice(0, MAX_SALE_RECORDS_DISPLA
     </section>
 
     <section class="panel">
-      <h4>📋 最近销售记录</h4>
+      <h4>📋 近期销售</h4>
+      <p class="section-hint">最近 {{ MAX_SALE_RECORDS_DISPLAY }} 笔，可在框内上下滑动查看</p>
       <div v-if="displaySales.length === 0" class="muted">暂无记录</div>
-      <button
-        v-for="s in displaySales"
-        :key="s.id"
-        type="button"
-        class="sale-record"
-        @click="showSaleDetail(s)"
-      >
-        <div class="sale-record-time">{{ formatSaleTime(s.createdAt) }}</div>
-        <div class="sale-record-sum">{{ s.totalQty }} 件 · ¥{{ formatMoney(s.totalAmount) }}</div>
-      </button>
+      <div v-else class="panel-scroll">
+        <button
+          v-for="s in displaySales"
+          :key="s.id"
+          type="button"
+          class="sale-record"
+          @click="showSaleDetail(s)"
+        >
+          <div class="sale-record-time">{{ formatSaleTime(s.createdAt) }}</div>
+          <div class="sale-record-sum">{{ s.totalQty }} 件 · ¥{{ formatMoney(s.totalAmount) }}</div>
+        </button>
+      </div>
     </section>
+
+    <SalesAnalyticsPanel />
 
     <section class="panel">
       <h4>🏷️ 分类管理</h4>
@@ -116,15 +131,6 @@ const displaySales = computed(() => store.sales.slice(0, MAX_SALE_RECORDS_DISPLA
         <input v-model="newCategoryName" type="text" placeholder="新分类名称" />
         <button class="btn-primary" @click="addCategory">添加</button>
       </div>
-    </section>
-
-    <section class="panel">
-      <h4>📖 使用说明</h4>
-      <p class="help-text">
-        <strong>卖货：</strong>「销售」页连续扫码 → 看合计 → 确认售出扣库存。<br />
-        <strong>入库：</strong>商品页点「入库+」，扫一次码后填写数量。<br />
-        <strong>收款：</strong>顾客扫您线下收款码，本 App 不处理支付。
-      </p>
     </section>
 
     <p class="footer-note">零售日志 · 离线本地版</p>
@@ -141,10 +147,12 @@ const displaySales = computed(() => store.sales.slice(0, MAX_SALE_RECORDS_DISPLA
   width: 100%;
   margin-top: 10px;
 }
-.hint {
+.hint,
+.section-hint {
   font-size: 12px;
   color: #888;
-  margin-top: 10px;
+  margin-top: 0;
+  margin-bottom: 10px;
 }
 .muted {
   color: #aaa;

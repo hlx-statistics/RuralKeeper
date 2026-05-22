@@ -101,3 +101,11 @@ body {
   margin-bottom: 12px;
   font-size: 16px;
 }
+
+/** 我的页等：列表过长时在板块内滚动，不挤占下方内容 */
+.panel-scroll {
+  max-height: min(280px, 38vh);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}

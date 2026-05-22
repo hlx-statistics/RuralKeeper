@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-05-22T15:54:57.529Z",
+  "builtAt": "2026-05-22T15:57:43.706Z",
   "source": "data\\raw\\barcodes.csv",
   "sampleLimit": null,
   "rowsRead": 1048643,
@@ -12,10 +12,12 @@
   "unique": 515102,
   "lite": {
     "maxBytes": 5242880,
-    "count": 97415,
-    "bytes": 5240479,
-    "ratio": 0.189118,
-    "sampling": "stratified-prefix-3",
-    "probe6921168520015": false
+    "count": 94230,
+    "bytes": 5242833,
+    "ratio": 0.182935,
+    "sampling": "food-major-brand-score",
+    "eligibleByScore": 98354,
+    "minScore": 25,
+    "probe6921168520015": true
   }
 }
