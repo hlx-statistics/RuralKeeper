@@ -304,8 +304,15 @@ watch(
 .header-actions {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
   justify-content: flex-end;
+}
+
+.header-actions .btn-icon {
+  font-size: 13px;
+  padding: 8px 10px;
+  white-space: nowrap;
 }
 .search-box {
   background: white;
@@ -338,7 +345,7 @@ watch(
 }
 .fab {
   position: fixed;
-  bottom: 85px;
+  bottom: calc(85px + var(--safe-bottom));
   right: 20px;
   background: var(--color-primary);
   color: white;

@@ -5,12 +5,13 @@ import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 import { fileURLToPath, URL } from 'node:url'
 
-/** 正式构建产物不包含演示备份，减小 APK / PWA 体积 */
-function excludeDemoBackupFromDist() {
+/** 正式构建产物不包含演示备份，减小 APK / PWA 体积（debug 同步保留） */
+function excludeDemoBackupFromDist(skip: boolean) {
   return {
     name: 'exclude-demo-backup-from-dist',
     apply: 'build' as const,
     closeBundle() {
+      if (skip) return
       const file = path.resolve('dist/demo-backup.json')
       try {
         fs.unlinkSync(file)
@@ -22,13 +23,14 @@ function excludeDemoBackupFromDist() {
 }
 
 export default defineConfig(({ mode }) => {
-  const forNative = mode === 'capacitor'
+  const forNative = mode === 'capacitor' || mode === 'capacitor-debug'
+  const useDemoData = mode === 'capacitor-debug'
 
   return {
     base: forNative ? './' : '/',
     plugins: [
       vue(),
-      excludeDemoBackupFromDist(),
+      excludeDemoBackupFromDist(useDemoData),
       VitePWA({
         disable: forNative,
         registerType: 'autoUpdate',

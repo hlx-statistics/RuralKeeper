@@ -42,7 +42,7 @@ function go(tab: AppRoute) {
   backdrop-filter: blur(10px);
   display: flex;
   justify-content: space-around;
-  padding: 8px 16px 12px;
+  padding: 8px 16px calc(12px + var(--safe-bottom));
   border-top: 0.5px solid #ddd;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
   z-index: 100;

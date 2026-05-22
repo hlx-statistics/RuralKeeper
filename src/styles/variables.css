@@ -13,6 +13,13 @@
   --radius-btn: 40px;
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.03);
   --tab-height: 70px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
   --touch-min: 44px;
   --max-width: 600px;
+}
+
+/* 原生 Android：env 常为 0，由 initSafeArea() 写入像素值；未就绪前用兜底避免贴顶 */
+html.platform-android.capacitor-native {
+  --safe-top: max(env(safe-area-inset-top, 0px), 36px);
 }

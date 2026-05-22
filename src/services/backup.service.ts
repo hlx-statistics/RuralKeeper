@@ -13,6 +13,7 @@ import { backupFileName } from '@/utils/format'
 import { createId } from '@/utils/id'
 import { isNativeApp } from '@/utils/platform'
 import { USE_DEMO_DATA } from '@/constants'
+import { RELEASE_SEED_GOODS } from '@/constants/release-seed'
 
 const BACKUP_VERSION = 2
 
@@ -113,47 +114,51 @@ export const backupService = {
 
     await categoryService.initDefaults()
     const count = (await goodsService.list()).length
-    if (count === 0) await seedSampleGoods()
+    if (count === 0) await seedEmptyDbGoods()
   },
 }
 
-async function seedSampleGoods(): Promise<void> {
-  const samples = [
-    {
-      barcode: '6901234567890',
-      name: '农夫山泉 550ml',
-      price: 2.0,
-      cost: 1.2,
-      stock: 30,
-      category: '饮料',
-      remark: '',
-    },
-    {
-      barcode: '6920152467899',
-      name: '康师傅红烧牛肉面',
-      price: 4.5,
-      cost: 3.2,
-      stock: 15,
-      category: '食品',
-      remark: '',
-    },
-    {
-      barcode: '6972183820126',
-      name: '清风抽纸 3包',
-      price: 9.9,
-      cost: 7.0,
-      stock: 8,
-      category: '日用品',
-      remark: '',
-    },
-  ]
+/** 演示备份缺失时 dev 回退用的三条占位商品 */
+const DEV_FALLBACK_GOODS = [
+  {
+    barcode: '6901234567890',
+    name: '农夫山泉 550ml',
+    price: 2.0,
+    cost: 1.2,
+    stock: 30,
+    category: '饮料',
+    remark: '',
+  },
+  {
+    barcode: '6920152467899',
+    name: '康师傅红烧牛肉面',
+    price: 4.5,
+    cost: 3.2,
+    stock: 15,
+    category: '食品',
+    remark: '',
+  },
+  {
+    barcode: '6972183820126',
+    name: '清风抽纸 3包',
+    price: 9.9,
+    cost: 7.0,
+    stock: 8,
+    category: '日用品',
+    remark: '',
+  },
+] as const
+
+async function seedEmptyDbGoods(): Promise<void> {
+  const samples = USE_DEMO_DATA ? DEV_FALLBACK_GOODS : RELEASE_SEED_GOODS
   for (const g of samples) {
     await goodsService.create(g)
   }
 }
 
 export async function initAppData(): Promise<void> {
-  if (USE_DEMO_DATA) {
+  /* 本地 dev 服务器：每次启动重置为完整演示数据 */
+  if (import.meta.env.DEV) {
     try {
       await backupService.loadDemoBackup()
       return
@@ -165,6 +170,14 @@ export async function initAppData(): Promise<void> {
   await categoryService.initDefaults()
   const goods = await goodsService.list()
   if (goods.length === 0) {
-    await seedSampleGoods()
+    if (USE_DEMO_DATA) {
+      try {
+        await backupService.loadDemoBackup()
+        return
+      } catch {
+        /* debug APK 无演示文件时回退占位三条 */
+      }
+    }
+    await seedEmptyDbGoods()
   }
 }
