@@ -47,7 +47,7 @@ scripts/patch-goods-form-modal.py
 # --- 条码参考库：原始数据不入库；全量 jsonl 由 build 生成到 public ---
 data/raw/
 data/processed/full/
-public/barcode-ref.jsonl
+# public/barcode-ref.jsonl
 public/barcode-ref-lite.json
 src/db/barcodes.csv
 src/db/barcodes.sql
